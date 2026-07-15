@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codex Personal Skin Preview</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-window">
+      <header class="titlebar">
+        <div class="window-mark" aria-hidden="true"><span></span><span></span></div>
+        <nav aria-label="应用菜单"><button>文件</button><button>编辑</button><button>视图</button><button>帮助</button></nav>
+        <div class="window-actions" aria-hidden="true"><span>—</span><span>□</span><span>×</span></div>
+      </header>
+
+      <div class="workspace">
+        <aside class="sidebar">
+          <div class="brand-row"><strong>Codex</strong><button class="icon-button" aria-label="搜索">⌕</button></div>
+          <nav class="primary-nav" aria-label="Codex 导航">
+            <button class="active"><span>✦</span>新建任务</button>
+            <button><span>▣</span>已安排</button>
+            <button><span>◇</span>技能</button>
+            <button><span>⌘</span>站点</button>
+            <button><span>⑂</span>拉取请求</button>
+            <button><span>◌</span>聊天</button>
+          </nav>
+
+          <section class="side-section">
+            <div class="section-label"><span>项目</span><button aria-label="添加项目">＋</button></div>
+            <button class="project-title"><span>▱</span><b id="projectName">Personal Studio</b></button>
+            <div class="project-links">
+              <button><span>▤</span>灵感收藏</button>
+              <button><span>⌁</span>今日创作</button>
+              <button><span>▧</span>作品档案</button>
+              <button><span>✎</span>一起练习</button>
+            </div>
+          </section>
+
+          <section class="side-section tasks">
+            <div class="section-label"><span>今日任务</span><b>4 / 6</b></div>
+            <label><input type="checkbox" checked /><span>整理今天的灵感</span></label>
+            <label><input type="checkbox" checked /><span>检查一个代码变更</span></label>
+            <label><input type="checkbox" /><span>构建新的小功能</span></label>
+            <label><input type="checkbox" /><span>记录今日进展</span></label>
+          </section>
+
+          <div class="sidebar-bottom">
+            <div class="progress"><span>连续创作</span><b>4 / 7</b><i><em></em></i></div>
+            <div class="profile"><div class="avatar">M</div><span><b>momo</b><small id="profileEdition">Personal edition</small></span><button aria-label="设置">⚙</button></div>
+          </div>
+        </aside>
+
+        <main class="main-panel">
+          <header class="edition-header">
+            <div class="edition-copy"><div class="edition-glyph" aria-hidden="true">✧</div><span><b id="editionName">Personal Codex Edition</b><small id="editionTagline">A workspace made to feel like yours</small></span></div>
+            <div class="header-controls">
+              <label class="portrait-upload">更换 IP
+                <input id="portraitInput" type="file" accept="image/png,image/jpeg,image/webp" />
+              </label>
+              <button class="reset-portrait" id="resetPortrait" type="button">恢复默认</button>
+              <label class="theme-select">皮肤
+                <select id="themeSelect" aria-label="选择皮肤"></select>
+              </label>
+            </div>
+          </header>
+
+          <section class="hero" aria-labelledby="heroTitle">
+            <div class="paper-grain" aria-hidden="true"></div>
+            <div class="hero-copy">
+              <div class="signature" id="signature">Momo</div>
+              <p class="eyebrow" id="eyebrow">YOUR PERSONAL CODEX</p>
+              <h1 id="heroTitle">我们该构建什么？</h1>
+              <p id="heroBody">把灵感交给 Codex，一起创造、检查与修复。</p>
+            </div>
+
+            <div class="portrait-wrap" aria-label="主题 IP 形象">
+              <img class="ip-portrait" id="ipPortrait" src="/skills/redesign-codex-ui/assets/default-identity/opcspace-ip-avatar.png" alt="透明背景的 OPCspace 默认紫色 IP 形象" />
+              <svg class="portrait-fallback" viewBox="0 0 420 360" role="img" aria-label="默认人物占位插画">
+                <defs><linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="var(--accent-soft)"/><stop offset="1" stop-color="var(--accent)"/></linearGradient></defs>
+                <ellipse class="halo" cx="235" cy="194" rx="165" ry="153" />
+                <path class="body-shape" d="M93 360c5-88 48-138 136-145 93 0 145 53 154 145z" />
+                <path class="neck" d="M183 186h79v74c-12 24-63 24-81 0z" />
+                <ellipse class="face" cx="221" cy="141" rx="69" ry="84" />
+                <path class="hair" d="M152 132c-5-64 23-111 86-112 55 1 86 36 73 102-14-20-31-34-52-43-22 27-64 38-107 38z" />
+                <path class="hair-lock" d="M232 27c-6 31-26 55-62 71 12-47 29-68 62-71z" />
+                <circle class="eye" cx="197" cy="145" r="4" /><circle class="eye" cx="246" cy="145" r="4" />
+                <path class="smile" d="M207 181c10 8 23 8 33 0" />
+                <path class="collar" d="M174 230l48 49 49-49 39 23-21 107H144l-17-107z" />
+              </svg>
+            </div>
+
+            <div class="orbit orbit-one" aria-hidden="true"></div>
+            <div class="orbit orbit-two" aria-hidden="true"></div>
+            <div class="stamp" aria-hidden="true"><b>CODEX</b><span>PERSONAL EDITION</span></div>
+            <div class="paper-note" aria-hidden="true">Made for you ✦</div>
+            <div class="pixel-sprite" aria-hidden="true">✦<br/>▟▙</div>
+
+            <div class="quick-actions" id="quickActions" aria-label="Codex 快捷能力"></div>
+          </section>
+
+          <section class="composer-region">
+            <div class="composer-label"><span>▱</span><b>选择项目</b><i></i></div>
+            <div class="composer">
+              <textarea id="composerInput" rows="2" placeholder="随心输入，让 Codex 陪你一起写代码吧…"></textarea>
+              <div class="composer-footer">
+                <div><button class="round-button" aria-label="添加附件">＋</button><button class="permission">▱ 完全访问</button><button class="heart" aria-label="收藏">♡</button></div>
+                <div><button class="model">Codex 5.6 ▾</button><button aria-label="语音">♩</button><button class="send" id="sendButton" aria-label="发送">↑</button></div>
+              </div>
+            </div>
+            <div class="floating-card" aria-hidden="true"><span>SKIN<br/>LIBRARY</span><b>06</b></div>
+          </section>
+        </main>
+      </div>
+      <div class="toast" id="toast" role="status">任务已准备好</div>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>
