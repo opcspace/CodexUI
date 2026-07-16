@@ -71,6 +71,10 @@ python3 <skill-dir>/scripts/detect_local_codex.py
 
 Then read [references/local-codex-modification.md](references/local-codex-modification.md) and choose the safe modification mode. Prefer source checkout or an official theme/custom-CSS hook. Treat a signed `app.asar` application as sealed; do not patch the installed bundle or terminate the running client without explicit authorization.
 
+For a signed macOS Codex without a supported theme hook, prefer the verified loopback runtime path in `scripts/live_skin_macos.py`. Run `doctor`, obtain explicit authorization before restarting an existing Codex process, run `launch`, then `apply` and `verify`. The controller accepts only the expected Bundle ID, valid signature/team, bundled Node 20+, a `127.0.0.1` CDP listener owned by that Codex process, and a `Codex` page at an `app://` URL. `remove` restores the renderer without rewriting `app.asar`; `watch` keeps the skin across renderer reloads while it remains running.
+
+When runtime injection is unavailable and the user explicitly authorizes a separate macOS side-loaded copy, use `scripts/build_macos_sidecar.py` instead of editing the primary application. Run `--dry-run` first. It changes the real renderer, product identity, bundle ID, URL scheme, user-data product name, update feed, ASAR integrity hash, and signature in the copy only. Replacing an existing stopped copy requires `--replace`; never replace a running copy. Launch with an explicit separate `--user-data-dir`, inspect the real window, then run `scripts/verify_macos_sidecar.py`. Keep client screenshots local unless the user explicitly authorizes publishing them.
+
 Start the existing app when feasible and capture a baseline at representative viewport sizes. Inspect real states rather than only the landing screen: empty task, active conversation, long content, code/diff or tool output, composer focus, loading, error, approval, and narrow layout.
 
 Read [references/codex-ui-surfaces.md](references/codex-ui-surfaces.md) before changing navigation, conversation structure, composer behavior, tool output, terminal/diff surfaces, or approval flows.
@@ -193,5 +197,8 @@ Never claim visual parity without inspecting a rendered result. Never claim veri
 - Use `assets/theme-library/default-identity.json` as the replaceable OPCspace starter identity.
 - Run `python3 <skill-dir>/scripts/validate_theme_library.py <skill-dir>/assets/theme-library` after adding or changing presets.
 - Run `scripts/detect_local_codex.py` to classify a local target, `scripts/export_theme_bundle.py` to prepare portable theme assets, and `scripts/apply_theme_to_source.py` to install and roll back a theme in an adapter-equipped source checkout.
+- Run `scripts/live_skin_macos.py doctor|launch|apply|verify|remove|watch` for a verified, reversible live skin on the real signed macOS Codex renderer.
 - Run `scripts/create_identity_profile.py` to package a user's replacement portrait without modifying the bundled default.
+- Run `scripts/build_macos_sidecar.py` only after explicit authorization to create an isolated, ad-hoc-signed macOS copy of a sealed installed app.
+- Run `scripts/verify_macos_sidecar.py` after every sidecar build or upstream Codex update.
 - Run `scripts/audit_codex_ui.py` to generate a quick, read-only repository inventory.

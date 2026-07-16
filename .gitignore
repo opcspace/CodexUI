@@ -4,3 +4,5 @@ __pycache__/
 .idea/
 .vscode/
 node_modules/
+local-build/
+docs/screenshots/local-macos-sidecar.*

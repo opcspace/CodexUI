@@ -37,7 +37,20 @@ Use this mode when the application exposes a documented theme directory, plugin 
 
 Never treat a temporary DevTools edit as a persistent installation.
 
-## Mode C: signed installed application
+## Mode C: verified loopback runtime skin on macOS
+
+Use this mode for the signed official macOS Codex when no supported theme hook exists. It changes the real running `app://` renderer and preserves native controls without rewriting the signed bundle.
+
+1. Run `python3 scripts/live_skin_macos.py doctor` and inspect Bundle ID, team ID, bundled Node, port ownership, and renderer target count.
+2. If Codex is already running without CDP, obtain explicit restart authorization. Never force-kill it.
+3. Run `launch`, then `apply`, then `verify`. Use only a loopback address.
+4. Inspect the real window and native states. Keep any client screenshot local-only by default.
+5. Use foreground `watch` when persistence across renderer reloads is needed. Stop it before running `remove`.
+6. Run `remove` to restore the unmodified renderer DOM. Restarting Codex also clears a one-shot runtime skin.
+
+The controller rejects a wrong Bundle ID, invalid signature/team, Node older than 20, a listener not owned by the selected Codex process, and non-`Codex` or non-`app://` CDP pages. Do not expose CDP on a LAN address.
+
+## Mode D: isolated modified copy of a signed application
 
 Use this mode when `detect_local_codex.py` finds a signed application bundle, sealed resources, or `app.asar` without an official customization hook.
 
@@ -52,11 +65,15 @@ Default behavior:
 
 If the user authorizes a side-loaded copy, use a separate application name, bundle identifier, data directory, and backup. Expect updates, notarization, and code signing to break or replace modifications. Re-run functional and security checks after every app update.
 
+Use only when Mode C is unavailable and the user explicitly accepts an ad-hoc-signed sidecar. `build_macos_sidecar.py` copies the application, injects the selected palette and identity into the real `webview/index.html`, changes the product identity and update feed, refreshes Electron's ASAR integrity hash, and applies an ad-hoc signature. Run `--dry-run` first. Existing copies require `--replace` and are backed up; running copies are never replaced, and failed builds restore the backup. Launch with an explicit isolated `--user-data-dir`, inspect the real window, then run `verify_macos_sidecar.py`. The copy is not notarized and must never replace the primary app.
+
+Do not publish real-client screenshots by default: they may expose project names, task history, account identity, attached files, or repository state. Keep them in a temporary location or a gitignored local-only path. Publishing requires explicit user authorization after visual inspection.
+
 ## Safety gates
 
 Stop before mutation when any of these are true:
 
-- only a production signed bundle is available and no side-loaded copy was authorized;
+- only a production signed bundle is available, runtime preflight failed, and no side-loaded copy was authorized;
 - the app is running and the requested step requires replacing its resources;
 - there is no backup or reproducible patch;
 - the integration point would bypass approval, permission, authentication, or update security;

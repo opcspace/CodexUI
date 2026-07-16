@@ -141,6 +141,40 @@ python3 skills/redesign-codex-ui/scripts/create_identity_profile.py \
 python3 skills/redesign-codex-ui/scripts/detect_local_codex.py
 ```
 
+### 首选：在真实 Codex 渲染器中实时生效
+
+macOS 已签名客户端没有官方主题入口时，可使用仅监听 `127.0.0.1` 的 CDP 注入。它不会改写 `/Applications/ChatGPT.app` 或 `app.asar`，而是把主题 CSS、语义化 DOM 标记和透明 IP 素材应用到真实 `app://` 渲染器，原生侧栏、任务、Composer 与按钮继续工作。
+
+这条运行时架构参考了开源项目 [Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin)，本项目在此基础上增加了可替换 IP 素材、皮肤设定库、Bundle/签名/端口进程归属预检、语义化界面验收，以及独立副本兼容路径。
+
+先做只读安全检查：
+
+```bash
+python3 skills/redesign-codex-ui/scripts/live_skin_macos.py doctor
+```
+
+如 Codex 已经运行但没有开启 CDP，先正常退出；只有用户明确允许重启时才可加入 `--restart-authorized`。随后执行：
+
+```bash
+python3 skills/redesign-codex-ui/scripts/live_skin_macos.py launch
+python3 skills/redesign-codex-ui/scripts/live_skin_macos.py apply \
+  --preset skills/redesign-codex-ui/assets/theme-library/presets/keepsake-olive.json \
+  --identity skills/redesign-codex-ui/assets/default-identity/opcspace-ip-avatar.png
+python3 skills/redesign-codex-ui/scripts/live_skin_macos.py verify
+```
+
+`verify` 会检查主题样式、透明头像、侧栏、主区、Composer、原生按钮与横向溢出。恢复无需改文件：
+
+```bash
+python3 skills/redesign-codex-ui/scripts/live_skin_macos.py remove
+```
+
+需要跨页面重载持续生效时，可在前台运行 `watch`；停止该进程后再执行 `remove`。控制器会校验官方 Bundle ID、签名 Team ID、内置 Node 版本、CDP 端口进程归属及 `Codex / app://` 页面，拒绝向其他应用或网页注入。
+
+本机已用隔离的 `OPCspace Codex.app` 完成真实窗口验收：主题、透明头像、侧栏、任务、Composer 和原生按钮均实际生效。真实客户端截图可能包含任务、项目与账户信息，默认只保存在本机 gitignore 路径，本仓库不发布该截图。
+
+### 源码项目
+
 如果有 Codex 前端源码或受支持的自定义主题入口，可导出皮肤补丁包：
 
 ```bash
@@ -149,7 +183,7 @@ python3 skills/redesign-codex-ui/scripts/export_theme_bundle.py \
   --output /path/to/local-codex/.codex-theme
 ```
 
-补丁包含作用域隔离的 CSS 变量和集成清单。对于代码签名保护、资源密封的已安装客户端，Skill 默认不会直接修改主应用；应优先使用源码版本或官方主题入口，制作独立旁路副本必须获得用户明确授权。
+补丁包含作用域隔离的 CSS 变量和集成清单。对于代码签名保护、资源密封的已安装客户端，Skill 默认不会直接修改主应用；应优先使用源码版本、官方主题入口或上面的可回滚运行时方式，制作独立旁路副本必须获得用户明确授权。
 
 对于 HTML 入口的可编辑源码，复制适配器模板并填写项目中的真实选择器：
 
