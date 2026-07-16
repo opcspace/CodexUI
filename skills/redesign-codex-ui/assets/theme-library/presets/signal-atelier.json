@@ -25,15 +25,15 @@
     "avatarOpacity": 0.14
   },
   "palette": {
-    "canvas": "#071018",
-    "surface": "#0B1721",
-    "surfaceRaised": "#10222D",
-    "ink": "#E8F1EE",
-    "mutedInk": "#86A0A5",
-    "accent": "#F2B84B",
-    "accentSoft": "#293120",
-    "line": "#23404A",
-    "focus": "#73D7C7"
+    "canvas": "#160E1A",
+    "surface": "#211426",
+    "surfaceRaised": "#2C1B31",
+    "ink": "#F5EEF6",
+    "mutedInk": "#B9A5BC",
+    "accent": "#7FE0C3",
+    "accentSoft": "#283A38",
+    "line": "#59405E",
+    "focus": "#F0A6D2"
   },
   "typography": {
     "display": "technical-grotesk",
