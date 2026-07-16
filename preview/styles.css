@@ -224,6 +224,26 @@ body[data-theme="celestial-fanclub"] .paper-note { background: color-mix(in srgb
 body[data-theme="celestial-fanclub"] .stamp { box-shadow: 0 0 25px color-mix(in srgb, var(--accent) 40%, transparent); }
 body[data-theme="celestial-fanclub"] .action-card { background: color-mix(in srgb, var(--raised) 82%, transparent); box-shadow: 0 12px 28px color-mix(in srgb, var(--accent) 14%, transparent); }
 
+/* Signal Atelier */
+body[data-theme="signal-atelier"] { color-scheme: dark; }
+body[data-theme="signal-atelier"] .app-window { background-image: linear-gradient(color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--line) 28%, transparent) 1px, transparent 1px); background-size: 32px 32px; }
+body[data-theme="signal-atelier"] .titlebar { border-bottom-color: var(--accent); }
+body[data-theme="signal-atelier"] .sidebar { box-shadow: inset -3px 0 0 color-mix(in srgb, var(--focus) 24%, transparent); }
+body[data-theme="signal-atelier"] .brand-row strong { font-family: var(--code); font-size: 20px; letter-spacing: .12em; text-transform: uppercase; }
+body[data-theme="signal-atelier"] .hero { border-radius: 10px; background: radial-gradient(circle at 76% 26%, color-mix(in srgb, var(--focus) 16%, transparent), transparent 22%), linear-gradient(color-mix(in srgb, var(--line) 34%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--line) 34%, transparent) 1px, transparent 1px), var(--raised); background-size: auto, 32px 32px, 32px 32px, auto; box-shadow: 0 18px 48px #0009; }
+body[data-theme="signal-atelier"] .hero::before { content: "X 064  /  Y 128     CHANNEL 11     LOCAL SIGNAL"; position: absolute; z-index: 4; left: 18px; right: 18px; top: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--focus); font: 10px var(--code); letter-spacing: .16em; }
+body[data-theme="signal-atelier"] .hero::after { content: ""; position: absolute; z-index: 2; right: 28%; top: 18%; width: 9px; aspect-ratio: 1; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 15%, transparent), 0 0 24px color-mix(in srgb, var(--accent) 55%, transparent); }
+body[data-theme="signal-atelier"] .signature { color: var(--accent); font: 600 13px var(--code); letter-spacing: .12em; text-transform: uppercase; transform: none; }
+body[data-theme="signal-atelier"] .hero h1 { font-family: var(--display); text-transform: uppercase; letter-spacing: -.015em; }
+body[data-theme="signal-atelier"] .portrait-wrap { opacity: .72; filter: saturate(.8) contrast(1.08) drop-shadow(0 18px 28px #0008); }
+body[data-theme="signal-atelier"] .ip-portrait { border: 0; box-shadow: none; }
+body[data-theme="signal-atelier"] .orbit, body[data-theme="signal-atelier"] .paper-note { display: none; }
+body[data-theme="signal-atelier"] .stamp { border-radius: 2px; border-color: var(--focus); color: var(--focus); transform: none; font-family: var(--code); }
+body[data-theme="signal-atelier"] .action-card { border-radius: 8px; border-top: 2px solid var(--accent); background: color-mix(in srgb, var(--surface) 90%, transparent); box-shadow: 0 9px 22px #0007; text-align: left; justify-items: start; }
+body[data-theme="signal-atelier"] .action-card::before { content: "●  READY"; color: var(--focus); font: 9px var(--code); letter-spacing: .13em; }
+body[data-theme="signal-atelier"] .action-icon { border-radius: 4px; background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+body[data-theme="signal-atelier"] .composer { border-radius: 8px; border-top: 2px solid var(--accent); background: color-mix(in srgb, var(--raised) 94%, transparent); box-shadow: 0 12px 28px #0008; }
+
 @media (max-width: 900px) {
   body { overflow: auto; }
   .app-window { min-height: 100vh; height: auto; }

@@ -53,6 +53,25 @@ def identity_asset_name(identity: Path) -> str:
 
 def css_for(preset: dict, asset_name: str) -> str:
     palette = preset["palette"]
+    appearance = "dark" if preset.get("appearance") == "dark" else "light"
+    runtime = preset.get("runtime", {})
+    avatar_opacity = runtime.get("avatarOpacity", 0.18)
+    badge_label = json.dumps(runtime.get("badgeLabel", "OPCspace · Personal Codex"), ensure_ascii=False)
+    variant_css = ""
+    if runtime.get("variant") == "signal-atelier":
+        variant_css = f"""
+      body {{
+        background-image: linear-gradient(color-mix(in srgb, {palette['line']} 26%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, {palette['line']} 26%, transparent) 1px, transparent 1px) !important;
+        background-size: 32px 32px !important;
+      }}
+      aside {{ box-shadow: inset -3px 0 0 color-mix(in srgb, {palette['focus']} 26%, transparent) !important; }}
+      main, [role="main"] {{
+        background-image: radial-gradient(circle at 82% 12%, color-mix(in srgb, {palette['focus']} 14%, transparent), transparent 24%), linear-gradient(color-mix(in srgb, {palette['line']} 20%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, {palette['line']} 20%, transparent) 1px, transparent 1px) !important;
+        background-size: auto, 32px 32px, 32px 32px !important;
+      }}
+      .composer-surface-chrome, [contenteditable="true"] {{ border-top: 2px solid {palette['accent']} !important; }}
+      body::before {{ border-radius: 4px !important; font-family: ui-monospace, monospace !important; }}
+"""
     return f"""
     <style id="{MARKER}" data-theme-id="{preset['id']}">
       :root, :root.electron-light, :root.electron-dark {{
@@ -77,11 +96,11 @@ def css_for(preset: dict, asset_name: str) -> str:
         --color-text-accent: {palette['focus']} !important;
         --color-icon-accent: {palette['accent']} !important;
         --codex-corner-radius-scale: 1.18;
-        color-scheme: light !important;
+        color-scheme: {appearance} !important;
       }}
       html, body, #root {{ background: {palette['canvas']} !important; }}
       body::before {{
-        content: "OPCspace · Personal Codex";
+        content: {badge_label};
         position: fixed; right: 22px; top: 12px; z-index: 2147483000;
         padding: 6px 11px; border: 1px solid {palette['line']}; border-radius: 999px;
         background: color-mix(in srgb, {palette['surfaceRaised']} 88%, transparent);
@@ -92,13 +111,14 @@ def css_for(preset: dict, asset_name: str) -> str:
         content: ""; position: fixed; right: 18px; bottom: 8px; z-index: 2147482999;
         width: min(19vw, 220px); height: min(31vh, 280px);
         background: url("./assets/{asset_name}") center bottom / contain no-repeat;
-        opacity: .18; filter: drop-shadow(0 12px 18px color-mix(in srgb, {palette['ink']} 18%, transparent));
+        opacity: {avatar_opacity}; filter: drop-shadow(0 12px 18px color-mix(in srgb, {palette['ink']} 18%, transparent));
         pointer-events: none;
       }}
       button, [role="button"], textarea, input {{ border-radius: max(8px, calc(10px * var(--codex-corner-radius-scale))) !important; }}
       ::selection {{ background: {palette['accentSoft']}; color: {palette['ink']}; }}
       @media (max-width: 780px) {{ body::after {{ opacity: .09; width: 150px; }} }}
       @media (prefers-reduced-motion: reduce) {{ *, *::before, *::after {{ animation-duration: .01ms !important; }} }}
+      {variant_css}
     </style>
 """
 

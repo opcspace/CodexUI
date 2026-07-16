@@ -11,6 +11,7 @@
     {"id": "red-carpet-noir", "label": "Red Carpet Noir", "category": "cinematic-celebrity", "path": "presets/red-carpet-noir.json", "bestFor": ["actor", "premiere", "award", "luxury"]},
     {"id": "cinema-contact-sheet", "label": "Cinema Contact Sheet", "category": "film-archive", "path": "presets/cinema-contact-sheet.json", "bestFor": ["actor", "director", "filmography", "analog"]},
     {"id": "vinyl-archive", "label": "Vinyl Archive", "category": "music-archive", "path": "presets/vinyl-archive.json", "bestFor": ["musician", "album", "discography", "retro"]},
-    {"id": "celestial-fanclub", "label": "Celestial Fanclub", "category": "fan-community", "path": "presets/celestial-fanclub.json", "bestFor": ["idol", "fan-club", "constellation", "dreamy"]}
+    {"id": "celestial-fanclub", "label": "Celestial Fanclub", "category": "fan-community", "path": "presets/celestial-fanclub.json", "bestFor": ["idol", "fan-club", "constellation", "dreamy"]},
+    {"id": "signal-atelier", "label": "Signal Atelier", "category": "signal-workbench", "path": "presets/signal-atelier.json", "bestFor": ["developer", "builder", "technical", "focused", "dark"]}
   ]
 }

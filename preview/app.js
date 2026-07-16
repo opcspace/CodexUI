@@ -12,7 +12,8 @@ const copy = {
   "red-carpet-noir": { signature: "PREMIERE / 06", title: "The next scene starts here.", body: "Scout the system, shape the performance, and refine the final cut.", eyebrow: "A FAN-MADE CINEMA EDITION", project: "Premiere Archive" },
   "cinema-contact-sheet": { signature: "FRAME 06A", title: "选择值得留下的一帧。", body: "浏览素材、搭建场景、检查每一次修改。", eyebrow: "CONTACT SHEET · TAKE 04", project: "Filmography Index" },
   "vinyl-archive": { signature: "SIDE A · TRACK 06", title: "Drop the needle. Build.", body: "Turn a codebase into a back catalog worth returning to.", eyebrow: "PERSONAL LISTENING ARCHIVE", project: "Discography Shelf" },
-  "celestial-fanclub": { signature: "made under the same stars", title: "点亮下一颗星。", body: "把项目、收藏与每一次创作连接成你的专属星图。", eyebrow: "FAN-MADE CONSTELLATION · NO. 06", project: "Celestial Fanclub" }
+  "celestial-fanclub": { signature: "made under the same stars", title: "点亮下一颗星。", body: "把项目、收藏与每一次创作连接成你的专属星图。", eyebrow: "FAN-MADE CONSTELLATION · NO. 06", project: "Celestial Fanclub" },
+  "signal-atelier": { signature: "CH / 11 · SIGNAL LOCKED", title: "捕捉下一条清晰信号。", body: "扫描系统，打开构建通道，把复杂问题校准成可以执行的下一步。", eyebrow: "OPERATOR WORKBENCH · LOCAL 127.0.0.1", project: "Signal Atelier" }
 };
 
 const fontMap = {
@@ -25,7 +26,8 @@ const fontMap = {
   "cinematic-serif": 'Didot, "Bodoni 72", serif',
   "film-serif": 'Rockwell, "American Typewriter", serif',
   "record-serif": '"Cooper Black", Georgia, serif',
-  "celestial-serif": 'Baskerville, "Iowan Old Style", serif'
+  "celestial-serif": 'Baskerville, "Iowan Old Style", serif',
+  "technical-grotesk": '"DIN Alternate", "Avenir Next Condensed", "Arial Narrow", sans-serif'
 };
 
 async function loadJson(url) {

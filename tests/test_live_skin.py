@@ -15,6 +15,7 @@ CONTROLLER = ROOT / "skills/redesign-codex-ui/scripts/live_skin_macos.py"
 INJECTOR = ROOT / "skills/redesign-codex-ui/scripts/live_skin_injector.mjs"
 PRESET = ROOT / "skills/redesign-codex-ui/assets/theme-library/presets/keepsake-olive.json"
 IDENTITY = ROOT / "skills/redesign-codex-ui/assets/default-identity/opcspace-ip-avatar.png"
+SIGNAL_PRESET = ROOT / "skills/redesign-codex-ui/assets/theme-library/presets/signal-atelier.json"
 
 spec = importlib.util.spec_from_file_location("live_skin_macos", CONTROLLER)
 module = importlib.util.module_from_spec(spec)
@@ -37,6 +38,15 @@ if node:
     assert report["themeId"] == "keepsake-olive"
     assert report["cssBytes"] > 1000
     assert report["identityBytes"] > 1000
+    signal = subprocess.run(
+        [node, str(INJECTOR), "check", "--preset", str(SIGNAL_PRESET), "--identity", str(IDENTITY)],
+        check=True, capture_output=True, text=True,
+    )
+    signal_report = json.loads(signal.stdout)
+    assert signal_report["themeId"] == "signal-atelier"
+    assert signal_report["appearance"] == "dark"
+    assert signal_report["variant"] == "signal-atelier"
+    assert signal_report["cssBytes"] > report["cssBytes"]
 
 source = INJECTOR.read_text(encoding="utf-8")
 for safeguard in ('target.title === "Codex"', 'target.url?.startsWith("app://")', "127.0.0.1"):

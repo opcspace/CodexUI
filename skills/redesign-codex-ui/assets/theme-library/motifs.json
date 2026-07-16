@@ -35,6 +35,9 @@
     {"id": "liner-note", "family": "music", "use": "metadata-card", "maxPerView": 2, "narrow": "hide", "pointerEvents": "none"},
     {"id": "constellation", "family": "fanclub", "use": "hero-background", "maxPerView": 1, "narrow": "reduce", "pointerEvents": "none"},
     {"id": "fanlight-orb", "family": "fanclub", "use": "status-accent", "maxPerView": 4, "narrow": "reduce", "pointerEvents": "none"},
-    {"id": "member-card", "family": "fanclub", "use": "edition-badge", "maxPerView": 1, "narrow": "hide", "pointerEvents": "none"}
+    {"id": "member-card", "family": "fanclub", "use": "edition-badge", "maxPerView": 1, "narrow": "hide", "pointerEvents": "none"},
+    {"id": "blueprint-grid", "family": "signal", "use": "workspace-depth", "maxPerView": 1, "narrow": "reduce", "pointerEvents": "none"},
+    {"id": "signal-pip", "family": "signal", "use": "active-status", "maxPerView": 4, "narrow": "keep", "pointerEvents": "none"},
+    {"id": "coordinate-label", "family": "signal", "use": "section-index", "maxPerView": 5, "narrow": "hide", "pointerEvents": "none"}
   ]
 }

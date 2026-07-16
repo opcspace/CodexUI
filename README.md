@@ -7,7 +7,7 @@
 - 根据一张或多张参考图分析布局、层级、色彩、字体、密度与交互语言
 - 根据「工程师、创始人、研究员、新手」等角色调整信息架构与操作优先级
 - 制作偶像、演员、歌手、明星、虚拟角色、原创 IP 或个人品牌限定版，包括人物 Hero、签名、票根、胶片、唱片、应援卡、主题项目和定制 Composer
-- 内置十套专属皮肤原型，包括收藏手账、舞台、电影、唱片、星空应援和个人品牌等方向
+- 内置十一套专属皮肤原型，包括收藏手账、舞台、电影、唱片、星空应援、信号工坊和个人品牌等方向
 - 提供独立的人物/IP身份档案与装饰语汇库，可复用称呼、语气、栏目、纪念日、素材授权及隐私边界
 - 默认使用 OPCspace 紫发 IP 形象，用户可在界面上传自己的 JPEG、PNG 或 WebP，并随时恢复默认
 - 根据风格关键词或产品气质生成原创 UI 规则，而非只做表面换色
@@ -65,9 +65,9 @@ skills/redesign-codex-ui/
 
 技能本体及资源位于 [`skills/redesign-codex-ui`](skills/redesign-codex-ui)。
 
-## 十套皮肤的本地 Codex 测试
+## 十一套皮肤的本地 Codex 测试
 
-十套皮肤先在功能结构等价的本地 Codex 预览壳中逐套验证；仓库还包含一个可运行的 Codex 源码夹具，用于验证安装器确实改写 HTML、加载 CSS 和透明 IP 素材，并能完整回滚。截图不是独立绘制的静态效果图。
+十一套皮肤先在功能结构等价的本地 Codex 预览壳中逐套验证；仓库还包含一个可运行的 Codex 源码夹具，用于验证安装器确实改写 HTML、加载 CSS 和透明 IP 素材，并能完整回滚。截图不是独立绘制的静态效果图。
 
 自动化测试会逐套检查：主题载入、侧栏和 Composer 可见、四张能力卡存在、能力卡能写入 Composer，以及浏览器无控制台错误。
 
@@ -111,6 +111,10 @@ skills/redesign-codex-ui/
 
 ![Celestial Fanclub Codex UI](docs/screenshots/celestial-fanclub.png)
 
+### Signal Atelier · 信号工坊
+
+![Signal Atelier Codex UI](docs/screenshots/signal-atelier.png)
+
 ### 本地运行
 
 ```bash
@@ -118,7 +122,7 @@ npm install
 npm run preview
 ```
 
-打开 `http://127.0.0.1:4173/preview/`，可从右上角切换十套皮肤。另开一个终端执行截图测试：
+打开 `http://127.0.0.1:4173/preview/`，可从右上角切换十一套皮肤。另开一个终端执行截图测试：
 
 ```bash
 npm run capture
