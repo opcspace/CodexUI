@@ -1,6 +1,6 @@
-# Codex macOS 皮肤制作与管理器导入指南
+# Codex macOS 皮肤制作、导入与导出指南
 
-本文是制作 Codex 桌面皮肤的统一入口。新的默认交付物是可由 **Codex 皮肤管理器**直接导入的 `.codexskin`，不再为每套皮肤新建 `.command`、CDP 端口和注入运行时。
+本文是制作、安装和分享 Codex 桌面皮肤的统一入口。新的默认交付物是可由 **Codex 皮肤管理器**直接导入、在权利允许时再次导出的 `.codexskin`，不再为每套皮肤新建 `.command`、CDP 端口和注入运行时。
 
 - 管理器项目：`/Users/admin/Documents/ai_project/CodexSkinManager`
 - 本机应用：`/Users/admin/Applications/Codex 皮肤管理器.app`
@@ -17,6 +17,7 @@
 | 需要一种现有模板无法表达的新布局 | 先在管理器项目增加一个受信任模板，再制作数据包 |
 | 已有 `.command`、CSS、ZIP 或旧 JSON 皮肤 | 使用 `$convert-to-codexskin` 只读检查，映射素材与模板后再打包 |
 | 只想安装别人制作的皮肤 | 下载 `.codexskin`，双击或在管理器中按 `⌘O` |
+| 导出已安装且获准分享的皮肤 | 选中皮肤，在顶部工具栏点“导出”或按 `⇧⌘E`，再做 SHA-256 与回导校验 |
 
 ### 第一次使用：只需要一句话
 
@@ -45,7 +46,7 @@
 想一次说完也可以：
 
 ```text
-查看 docs/codex-cdp-skin-launcher.md，为《沧元图》柳七月制作一套 Codex 皮肤。先给我 3 个方案并推荐 1 个；等我确认后再生成无水印原创同人素材，复用或新增安全模板，直接输出 .codexskin，通过管理器导入，完成宽窄屏与自动化测试。若我要求提交，连同源文件、许可、截图和可公开分发的成品一起上传 GitHub。
+查看 docs/codex-cdp-skin-launcher.md，为《沧元图》柳七月制作一套 Codex 皮肤。先给我 3 个方案并推荐 1 个；等我确认后再生成无水印原创同人素材，复用或新增安全模板，直接输出 .codexskin，通过管理器导入，完成宽窄屏、导出回导与自动化测试。若我要求提交，连同源文件、许可、截图和可公开分发的成品一起上传 GitHub。
 ```
 
 ### 为什么这样更顺
@@ -99,6 +100,7 @@
 ```text
 skins/<skin-id>/
 ├── skin.json
+├── preview.png             # 最终 16:10 合成预览
 ├── assets/
 │   ├── background.png
 │   ├── hero.png
@@ -127,7 +129,7 @@ skins/<skin-id>/
   "version": "1.0.0",
   "template": "undying-phoenix-v1",
   "minManagerVersion": "1.1.0",
-  "preview": "assets/background.png",
+  "preview": "preview.png",
   "author": {
     "name": "OPCspace",
     "website": null
@@ -177,12 +179,14 @@ skins/<skin-id>/
 
 - `id`：3–64 字节，小写字母、数字、连字符和分段点号。
 - `version`、`minManagerVersion`：严格使用 `x.y.z`。
-- `preview`：必须指向包内 PNG/JPEG。
+- `preview`：必须指向包内 PNG/JPEG；推荐使用根目录的 `preview.png`。
 - 图片：单张不超过 32 MB；PNG 必须是真 PNG，JPEG 必须是真 JPEG。
 - 许可：至少有一个 `LICENSES/**/*.txt`，必须是非空 UTF-8 文本。
 - 焦点：`x` 和 `y` 均为 `0–1`，表示图片裁切时的视觉中心。
 - 色彩令牌：`#RRGGBB` 或 `#RRGGBBAA`。
 - 数值令牌：字符串形式的 `0–1000`。
+
+`preview.png` 是管理器列表和右侧详情使用的最终主图，不会由管理器临时把 `background` 与 `hero` 自动合成。它应是实际皮肤的 16:10 合成图或真实截图，推荐 1600×1000 px，并保持人物、背景、配色和构图与应用后的皮肤一致。有人物立绘时不能只用背景图充当预览，否则会出现“管理器主图没有人物、真实皮肤有人物”的错位。
 
 允许的图片槽：
 
@@ -214,7 +218,7 @@ motionDuration
 panelRadius
 ```
 
-## 4. 一条主流程：制作、打包、导入
+## 4. 一条主流程：制作、打包、导入、导出
 
 ### 4.1 制作视觉资源
 
@@ -222,6 +226,7 @@ panelRadius
 
 | 资源 | 推荐规格 | 要求 |
 | --- | --- | --- |
+| `preview.png` | 1600×1000 px | 最终 16:10 合成预览，必须与真实皮肤一致 |
 | `hero.png` | 高度 1600–2400 px | 真透明背景、边缘干净、无水印 |
 | `background.png` | 2400×1600 px 或更大 | 横向构图，文字区不要过于复杂 |
 | `avatar.png` | 512×512 px 或更大 | 可选，主体居中 |
@@ -230,7 +235,9 @@ panelRadius
 
 - 立绘没有白底伪透明、棋盘格、角标或意外文字；
 - 脸部、武器等视觉重点能通过 `focalPoints` 保留；
+- `preview.png` 已合成人物与背景，并与应用后的皮肤构图一致；
 - 宽屏、普通窗口和窄屏都不遮挡 Composer、任务列表和审批操作；
+- 左下角账号行属于原生交互安全区，主题名、徽章、头像和装饰不能与它重叠；
 - 素材来源与使用边界已写入 `LICENSES/assets.txt`。
 
 ### 4.2 打包
@@ -260,21 +267,67 @@ python3 "/Users/admin/Documents/ai_project/CodexSkinManager/scripts/build_codexs
 
 ### 4.3 导入和应用
 
-生成后可直接打开：
+生成后有五种等价入口：
+
+1. 在 Finder 中双击 `.codexskin`；
+2. 在管理器顶部工具栏点击“导入”；
+3. 在“文件”菜单选择“导入皮肤…”，或按 `⌘O`；
+4. 把 `.codexskin` 拖入管理器窗口；
+5. 在终端直接打开：
 
 ```bash
 /usr/bin/open -a "/Users/admin/Applications/Codex 皮肤管理器.app" "$OUTPUT"
 ```
 
-也可以：
+导入完成后：
 
-1. 打开“Codex 皮肤管理器”；
-2. 按 `⌘O` 选择 `.codexskin`；
-3. 检查名称、模板、作者和权利提示；
-4. 点击“应用皮肤”；
-5. 需要停用时点击“恢复默认”。
+1. 检查名称、最终预览、模板、作者、信任状态和权利提示；
+2. 选中皮肤，根据当前状态点击“切换到此皮肤”“重新应用”或失败后的“重试切换”；
+3. 需要停用时点击“恢复默认”。
 
-管理器负责选择自己的本机端口并启动官方 Codex。不要为皮肤填写或固定 `9340` 等端口；端口不属于皮肤包，也不是官方 Codex 的固定接口。
+相同 `id + version` 且内容一致的包再次导入会识别为“已安装”，不会新增重复卡片；同一 `id + version` 但内容不同会被拒绝，修改内容后必须递增版本。管理器只为每个皮肤 ID 显示最高语义版本，旧版本仍可保留在安装库中。
+
+当前管理器运行时只连接 `127.0.0.1:9340`，并验证监听者属于官方 Codex 进程；这只是管理器的本机实现配置，不是官方 Codex 的固定接口。皮肤包不配置端口，也不得携带启动器或注入脚本。
+
+### 4.4 导出已安装皮肤
+
+导出资格由包内权利声明决定，不由“未签名”“已安装”或用户点击动作推定：
+
+| `rights.redistributionAllowed` | 管理器行为 |
+| --- | --- |
+| `true` | 顶部工具栏“导出”和“文件 → 导出所选皮肤…”可用 |
+| `false` | 视为“仅限本机”，导出保持锁定并显示许可原因 |
+| 缺失或权利不明 | 按不可重新分发处理，不得绕过锁定 |
+
+导出步骤：
+
+1. 在皮肤列表中选中要分享的皮肤；
+2. 点击顶部工具栏“导出”，或按 `⇧⌘E`；
+3. 选择保存位置。默认文件名为 `<skin-id>-<version>.codexskin`；
+4. 核对输出文件与权利说明，再执行第 4.5 节的校验。
+
+管理器会从已经安全存储的声明式文件重新构建确定性包，重新计算文件描述和哈希，并移除发布者公钥字段；它不会把缓存、安装回执或可执行代码导出。导出不会创造新的著作权或重新分发授权：只有 `redistributionAllowed: true` 才能启用导出，`commercialUse`、署名和其他许可条件仍然有效。
+
+### 4.5 导出后回导与校验
+
+每个准备交付或上传 Release 的包都要计算 SHA-256，并回导一次：
+
+```bash
+EXPORTED="/绝对路径/<skin-id>-<version>.codexskin"
+
+shasum -a 256 "$EXPORTED"
+/usr/bin/open -a "/Users/admin/Applications/Codex 皮肤管理器.app" "$EXPORTED"
+```
+
+预期结果：
+
+- 同一份导出包回导会识别为已安装，不产生第二张重复卡片；
+- 同 `id + version` 的内容冲突包会拒绝导入；
+- 预览图、模板、令牌、权利状态与导出前一致；
+- 权利受限的皮肤应验证“导出”保持锁定，而不是修改包或关闭校验绕过；
+- 再次从相同已安装内容导出时，文件字节和 SHA-256 保持一致。
+
+“导出成功”只表示得到了可移植文件，不等于可以公开发布。上传 GitHub Release 前仍需核对 `LICENSES`、`rights` 和素材来源；发布时同时提供 `.codexskin`、SHA-256、使用说明和必要署名。
 
 ## 5. 在新 Codex 任务中使用的提示词
 
@@ -303,17 +356,19 @@ python3 "/Users/admin/Documents/ai_project/CodexSkinManager/scripts/build_codexs
 要求：
 1. 先检查两个仓库状态和项目 AI 上下文，不覆盖已有皮肤或用户改动。
 2. 视觉方向不明确时，先给我 3 个方案选择。
-3. 新皮肤直接创建 skin.json、assets 和 LICENSES，不先创建 .command。
+3. 新皮肤直接创建 skin.json、最终 16:10 preview.png、assets 和 LICENSES，不先创建 .command；preview 必须合成人物与背景，不能只用背景图。
 4. 优先复用管理器已有模板；只有现有模板无法表达布局时才新增管理器模板。
 5. .codexskin 不得携带 CSS、JS、Shell、远程资源或可执行文件。
 6. 使用 scripts/build_codexskin.py 打包，并通过管理器导入和应用。
 7. 先写失败测试，再实现新模板或打包能力。
 8. 检查宽屏和窄屏，不能遮挡任务、Composer、代码、Diff、终端和审批。
-9. 完成自动化测试、真实 Codex 应用/恢复验证和官方签名检查。
-10. 更新项目上下文，记录素材权利、模板、输出包、测试和下一步。
-11. 如果我要求提交、推送、创建 PR 或发布，在权利允许的前提下，把对应皮肤的宽窄屏截图、声明式源文件、许可说明和可分发 `.codexskin` 一并上传到 GitHub；不得只提交代码或指南。受限素材必须改用明确授权的私有仓库/私有渠道，或在交付中说明未上传原因。
+9. 把左下角账号行当作原生交互安全区；主题标题、主题名、原生内容使用 Flex order -2 / -1 / 0，并在真实 UI 中测量主题标识与账号控件重叠为 0px。
+10. 对允许分发的皮肤执行管理器导出、SHA-256 和回导验证；仅限本机皮肤验证导出锁定，不得绕过。
+11. 完成自动化测试、真实 Codex 应用/恢复验证和官方签名检查。
+12. 更新项目上下文，记录素材权利、模板、源目录、打包输出、导出输出、SHA-256、测试和下一步。
+13. 如果我要求提交、推送、创建 PR 或发布，在权利允许的前提下，把对应皮肤的宽窄屏截图、声明式源文件、许可说明和可分发 `.codexskin` 一并上传到 GitHub；不得只提交代码或指南。受限素材必须改用明确授权的私有仓库/私有渠道，或在交付中说明未上传原因。
 
-完成后告诉我：源目录、输出 .codexskin、使用的模板、如何导入/应用、测试结果、权利边界，以及提交分支、commit、PR/Release 链接和实际上传文件。
+完成后告诉我：源目录、打包与导出的 .codexskin、SHA-256、使用的模板、如何导入/应用/导出、回导测试结果、权利边界，以及提交分支、commit、PR/Release 链接和实际上传文件。
 ```
 
 如果工作区路径变化，先定位本文和 `CodexSkinManager/scripts/build_codexskin.py` 的新绝对路径再执行。
@@ -376,13 +431,17 @@ docs/skins/<skin-id>/skin-brief.md
 - [ ] 打包测试
 - [ ] 管理器导入
 - [ ] 应用与恢复验证
+- [ ] 左下角账号安全区 0px 重叠验证
+- [ ] 导出或仅限本机锁定状态验证
+- [ ] 导出回导与 SHA-256 验证
 - [ ] Git 提交/发布素材范围核对
 - [ ] 项目上下文更新
 
 ## 输出
 
 - source：
-- package：
+- authored-package：
+- exported-package：
 - sha256：
 - git branch / commit：
 - PR / Release：
@@ -398,11 +457,20 @@ docs/skins/<skin-id>/skin-brief.md
 
 ### 7.1 自动化验证
 
+先验证本指南的示例和操作契约：
+
+```bash
+cd "/Users/admin/.codex/worktrees/3ae1/CodexUI"
+python3 -m unittest tests/test_codexskin_guide.py
+```
+
 在管理器项目中运行：
 
 ```bash
 cd "/Users/admin/Documents/ai_project/CodexSkinManager"
 python3 tests/test_skin_authoring_packager.py
+cd skin-manager && swift test --filter SkinPackageExporterTests
+cd ..
 npm test
 ```
 
@@ -418,13 +486,14 @@ npm run test:e2e
 
 ### 7.2 人工验证
 
-1. 导入生成的 `.codexskin`；
-2. 确认预览图、名称、作者、模板和权利状态正确；
+1. 通过双击、工具栏、`⌘O` 或拖入方式导入生成的 `.codexskin`；
+2. 确认最终预览图与真实皮肤一致，并核对名称、作者、模板和权利状态；
 3. 应用皮肤并检查首页、侧栏、Composer、任务页、代码、Diff、终端和审批；
-4. 切换宽屏和窄屏；
-5. 退出后重新应用，检查持久化；
-6. 点击“恢复默认”，确认页面状态被清理；
-7. 验证官方应用没有被修改或重签名。
+4. 切换宽屏和窄屏，测量左下角主题标识与账号控件矩形重叠为 `0px`；
+5. 退出后点击“重新应用”；模拟失败状态时确认“重试切换”可用；
+6. 允许分发时导出、计算 SHA-256 并回导；仅限本机时确认导出锁定；
+7. 点击“恢复默认”，确认页面状态被清理；
+8. 验证官方应用没有被修改或重签名。
 
 官方完整性检查：
 
@@ -439,10 +508,12 @@ codesign --verify --deep --strict --verbose=2 \
 - [ ] 源目录只把安全声明式数据作为包输入。
 - [ ] 素材来源和使用范围已写入 `LICENSES` 与 `rights`。
 - [ ] `skin.json` 使用受支持模板和令牌。
+- [ ] `preview.png` 是人物与背景合成后的最终 16:10 主图，与真实皮肤一致。
 - [ ] `.codexskin` 由通用打包器生成，未手改 manifest。
 - [ ] 包内没有 `.command`、CSS、JS、二进制或远程资源。
 - [ ] 管理器能成功导入、应用和恢复。
-- [ ] 宽窄屏与核心工作流可用。
+- [ ] 宽窄屏与核心工作流可用，左下角账号安全区重叠为 `0px`。
+- [ ] 可分发皮肤完成导出、SHA-256 和回导；仅限本机皮肤确认导出锁定。
 - [ ] 自动化测试通过。
 - [ ] 官方 Codex 签名有效。
 - [ ] 如果用户要求提交或发布，对应皮肤截图、源文件和获准分发的成品已经上传，而不是只保留在本机。
@@ -500,6 +571,8 @@ CodexSkinManager/
 - Swift 合约、Node `TEMPLATE_CATALOG` 和打包器允许列表必须一致；
 - CSS 不得使用 `@import`、远程 URL 或工作区绝对路径；
 - 装饰层必须 `pointer-events: none`；
+- 左下角账号行是原生交互安全区。主题装饰标题、主题名、原生导航内容按 Flex order `-2 / -1 / 0` 排列，主题内容放在账号行上方；
+- 自动化或真实页面测量必须证明主题标识与账号控件矩形重叠为 `0px`，不能只凭截图目测；
 - 提供窄屏和 `prefers-reduced-motion` 降级；
 - 先添加失败测试，再实现模板并重建管理器。
 
@@ -563,11 +636,12 @@ python3 skills/convert-to-codexskin/scripts/inspect_legacy_skin.py \
 2. 运行只读检查器并向用户展示迁移摘要；
 3. 确认素材来源、是否允许重新分发和商业使用；
 4. 复制或转换获准使用的图片，旧 CSS 只用于选择/新增管理器模板；
-5. 新建标准源目录、`skin.json`、`LICENSES` 和 `skin-brief.md`；
+5. 新建标准源目录、`skin.json`、最终 16:10 `preview.png`、`LICENSES` 和 `skin-brief.md`；
 6. 用 `CodexSkinManager/scripts/build_codexskin.py` 生成 `.codexskin`；
-7. 通过管理器完成导入、应用、恢复以及宽窄屏验证；
-8. 用户要求提交时，按第 7.4 节上传源文件、截图和获准分发的成品；
-9. 验证成功后再决定是否保留旧文件，不自动删除用户原件。
+7. 通过管理器完成导入、应用、恢复、宽窄屏和左下角账号安全区 `0px` 重叠验证；
+8. 允许分发时完成导出、SHA-256 与回导；仅限本机时确认导出锁定；
+9. 用户要求提交时，按第 7.4 节上传源文件、截图和获准分发的成品；
+10. 验证成功后再决定是否保留旧文件，不自动删除用户原件。
 
 转换时不会把旧文件中的以下内容打入包：
 
