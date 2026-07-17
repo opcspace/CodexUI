@@ -41,6 +41,65 @@ cp -R skills/redesign-codex-ui "${CODEX_HOME:-$HOME/.codex}/skills/"
 使用 $redesign-codex-ui，参考我上传的偶像主题截图和我提供的正版素材，制作一个米白与橄榄绿的限定版 Codex。需要人物 Hero、签名贴纸、主题项目、四张真实能力卡和定制输入框，并验证窄屏裁切。
 ```
 
+## 用一句话制作可导入的 Codex 皮肤
+
+第一次使用不需要先理解 CDP、模板或 `skin.json`。在 Codex 中打开本仓库，像下面这样提问即可：
+
+只想看方案时无需额外安装；准备导入和应用时，从 [Codex Skin Manager Releases](https://github.com/LouisDM/CodexSkinManager/releases) 下载管理器。
+
+```text
+查看 codex-cdp-skin-launcher.md，制作《沧元图》柳七月的 Codex 皮肤，先给我 3 个风格差异明显的方案选择。
+```
+
+Codex 会先阅读[完整制作指南](docs/codex-cdp-skin-launcher.md)，再把角色特征翻译成 3 个可比较的产品方案，而不是立即生成一堆无法取舍的素材。
+
+### 推荐的三步对话
+
+| 阶段 | 你只需要说 | Codex 应交付 |
+| --- | --- | --- |
+| 选方向 | 上面的“一句话”提示词 | A/B/C 三个方案、推荐项、模板判断和权利风险 |
+| 开始制作 | `我选 A，参考官方造型特征，生成无水印原创同人素材并开工。` | 皮肤源目录、可导入 `.codexskin`、宽窄屏截图和测试 |
+| 提交发布 | `确认提交，把对应截图和文件一起上传 GitHub。` | commit、PR/Release、上传清单和权利排除项 |
+
+选定方案后的推荐提示词：
+
+```text
+我选 A。参考官方造型特征，生成无水印原创同人素材，直接制作成可导入 Codex 皮肤管理器的 .codexskin。完成宽屏、窄屏、导入、应用、恢复和自动化测试；不要修改或重签名官方 Codex。
+```
+
+需要 GitHub 交付时：
+
+```text
+确认提交。把这套皮肤的 skin.json、assets、LICENSES、宽窄屏截图和获准分发的 .codexskin 一起上传 GitHub；更新项目上下文，并给我分支、commit、PR 和 Release 链接。受限素材不要上传到公开仓库，要列出未上传文件和原因。
+```
+
+也可以一次给出完整任务：
+
+```text
+查看 docs/codex-cdp-skin-launcher.md，为《沧元图》柳七月制作一套 Codex 皮肤。先给我 3 个差异明显的方案并推荐 1 个，等我确认后再生成无水印原创同人素材；直接输出可由 Codex 皮肤管理器导入的 .codexskin，完成宽窄屏和自动化测试。若我要求提交，连同源文件、许可、截图和可公开分发的成品一起上传 GitHub。
+```
+
+### 最终会得到什么
+
+```text
+skins/<skin-id>/
+├── skin.json
+├── assets/
+├── LICENSES/
+└── skin-brief.md
+
+docs/screenshots/
+├── <skin-id>.png
+└── <skin-id>-narrow.png
+
+<skin-id>-<version>.codexskin
+```
+
+- **CodexUI** 负责角色研究、方案选择、视觉素材、模板设计和截图验收。
+- **[Codex Skin Manager](https://github.com/LouisDM/CodexSkinManager)** 负责安全打包、导入、应用和恢复。
+- 新皮肤直接生成 `.codexskin`，不先制作 `.command`，也不需要用户选择 `9340` 等端口。
+- 公开 GitHub 交付受 `LICENSES` 和 `redistributionAllowed` 约束；权利不明时默认只做本地版本。
+
 ## 默认 OPCspace IP
 
 未提供人物素材时，所有皮肤默认使用下面的 OPCspace 紫发 IP。用户可以从界面右上角替换，或通过独立身份档案配置自己的素材；默认文件始终保留用于恢复。
