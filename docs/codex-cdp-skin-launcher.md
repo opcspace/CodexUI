@@ -281,8 +281,9 @@ python3 "/Users/admin/Documents/ai_project/CodexSkinManager/scripts/build_codexs
 8. 检查宽屏和窄屏，不能遮挡任务、Composer、代码、Diff、终端和审批。
 9. 完成自动化测试、真实 Codex 应用/恢复验证和官方签名检查。
 10. 更新项目上下文，记录素材权利、模板、输出包、测试和下一步。
+11. 如果我要求提交、推送、创建 PR 或发布，在权利允许的前提下，把对应皮肤的宽窄屏截图、声明式源文件、许可说明和可分发 `.codexskin` 一并上传到 GitHub；不得只提交代码或指南。受限素材必须改用明确授权的私有仓库/私有渠道，或在交付中说明未上传原因。
 
-完成后告诉我：源目录、输出 .codexskin、使用的模板、如何导入/应用、测试结果和权利边界。
+完成后告诉我：源目录、输出 .codexskin、使用的模板、如何导入/应用、测试结果、权利边界，以及提交分支、commit、PR/Release 链接和实际上传文件。
 ```
 
 如果工作区路径变化，先定位本文和 `CodexSkinManager/scripts/build_codexskin.py` 的新绝对路径再执行。
@@ -332,6 +333,8 @@ docs/skins/<skin-id>/skin-brief.md
 - background：
 - avatar：
 - LICENSES：
+- wide-screenshot：
+- narrow-screenshot：
 
 ## 当前进度
 
@@ -343,6 +346,7 @@ docs/skins/<skin-id>/skin-brief.md
 - [ ] 打包测试
 - [ ] 管理器导入
 - [ ] 应用与恢复验证
+- [ ] Git 提交/发布素材范围核对
 - [ ] 项目上下文更新
 
 ## 输出
@@ -350,6 +354,8 @@ docs/skins/<skin-id>/skin-brief.md
 - source：
 - package：
 - sha256：
+- git branch / commit：
+- PR / Release：
 
 ## 已知问题与下一步
 
@@ -409,7 +415,33 @@ codesign --verify --deep --strict --verbose=2 \
 - [ ] 宽窄屏与核心工作流可用。
 - [ ] 自动化测试通过。
 - [ ] 官方 Codex 签名有效。
+- [ ] 如果用户要求提交或发布，对应皮肤截图、源文件和获准分发的成品已经上传，而不是只保留在本机。
 - [ ] 任务档案和项目上下文已更新。
+
+### 7.4 Git 提交与上传规则
+
+当用户明确说“提交”“commit”“push”“上传 Git”“创建 PR”或“发布 Release”时，除非用户明确缩小范围，否则默认提交范围必须包含该皮肤的完整可交接材料，不能只提交制作指南、模板代码或打包脚本：
+
+1. `skins/<skin-id>/skin.json`、被引用的 `assets/`、`LICENSES/` 和 `skin-brief.md`；
+2. 对应皮肤的宽屏、窄屏截图，建议命名为 `docs/screenshots/<skin-id>.png` 与 `docs/screenshots/<skin-id>-narrow.png`；
+3. 新增或修改的管理器模板、测试、作者文档和项目上下文；
+4. 权利允许公开分发的 `.codexskin` 与 SHA-256；仓库不跟踪发行二进制时，上传到对应 GitHub Release，并在 PR 中链接；
+5. 能让另一台设备上的 AI 重新打包、验证和发布所需的非敏感文件。
+
+提交前必须先核对 `rights.json`/`skin.json` 与 `LICENSES`：
+
+- `redistributionAllowed: true`：可以把对应源素材、截图和成品上传到公开 Git/Release，但仍要遵守 `commercialUse` 和署名要求；
+- `redistributionAllowed: false`：不得上传到公开仓库或公开 Release。只有用户明确授权并确认目标为私有仓库/私有渠道时才能上传；否则只提交安全的代码、模板、测试和文档，并清楚列出未上传的素材、截图或成品；
+- 权利不明：按不可公开处理，不得因为收到“提交”指令就推定已获授权。
+
+发布前执行并检查：
+
+```bash
+git status --short
+git diff --cached --name-status
+```
+
+只精确暂存本次皮肤文件，避免带入其他工作区改动。完成后必须报告分支、commit、PR/Release 链接、实际上传清单，以及因权利或仓库策略未上传的文件。
 
 ## 8. 什么时候需要新增管理器模板
 
