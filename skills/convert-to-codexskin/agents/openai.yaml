@@ -1,0 +1,4 @@
+interface:
+  display_name: "Convert to .codexskin"
+  short_description: "安全检查旧皮肤并转换为可导入的 .codexskin"
+  default_prompt: "使用 $convert-to-codexskin，把我提供的旧皮肤安全转换为可导入的 .codexskin；先只读分析，确认后再打包。"

@@ -79,6 +79,8 @@ Start the existing app when feasible and capture a baseline at representative vi
 
 Read [references/codex-ui-surfaces.md](references/codex-ui-surfaces.md) before changing navigation, conversation structure, composer behavior, tool output, terminal/diff surfaces, or approval flows.
 
+Treat the lower-left Codex account row as a reserved interaction safe area. Never place theme identity, badges, avatars, ornaments, pseudo-element content, or fixed decoration over it. Put sidebar theme identity before native navigation content; current Codex Skin Manager templates use Flex order `-2` for the decorative title, `-1` for the theme name, and `0` for native content.
+
 ### 3. Convert inspiration into a design system
 
 Create a compact evidence-to-decision table:
