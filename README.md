@@ -79,6 +79,42 @@ Codex 会先阅读[完整制作指南](docs/codex-cdp-skin-launcher.md)，再把
 查看 docs/codex-cdp-skin-launcher.md，为《沧元图》柳七月制作一套 Codex 皮肤。先给我 3 个差异明显的方案并推荐 1 个，等我确认后再生成无水印原创同人素材；直接输出可由 Codex 皮肤管理器导入的 .codexskin，完成宽窄屏和自动化测试。若我要求提交，连同源文件、许可、截图和可公开分发的成品一起上传 GitHub。
 ```
 
+### 已有自己的皮肤，但不是 `.codexskin`
+
+仓库提供 [`$convert-to-codexskin`](skills/convert-to-codexskin/SKILL.md) Skill，可处理 `.command`、CSS+图片目录、ZIP、旧主题 JSON 或复制出来的皮肤运行时。
+
+安装 Skill：
+
+```bash
+cp -R skills/convert-to-codexskin \
+  "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+然后告诉 Codex：
+
+```text
+使用 $convert-to-codexskin，把“/我的皮肤路径”转换为 Codex Skin Manager 可导入的 .codexskin。先只读检查，不执行任何旧脚本；先告诉我可复用素材、需要转换的图片、模板映射、权利缺口和会被排除的文件，我确认后再打包和测试。
+```
+
+最短说法也可以：
+
+```text
+查看 skills/convert-to-codexskin/SKILL.md，把我这个旧 Codex 皮肤安全转换成 .codexskin。
+```
+
+转换过程遵循以下边界：
+
+| 旧格式 | 转换方式 |
+| --- | --- |
+| PNG/JPEG + JSON | 映射到 `skin.json`、`assets` 和 `LICENSES` |
+| CSS + 图片 | CSS 只作为视觉参考，映射到管理器已有模板 |
+| `.command` / JS / Shell | 只读清点，绝不执行，也不进入新包 |
+| ZIP | 在内存中检查目录，不解压到仓库或用户目录 |
+| WebP/GIF/SVG/HEIC | 保留原件，另存为受支持的 PNG/JPEG |
+| 无许可或权利不明 | 只能生成不可公开分发的本地版本 |
+
+任意旧 CSS 都无法安全地“一键原样搬运”：如果现有模板表达不了布局，Codex 会提出新增管理器模板并先补测试，而不是降低导入器安全限制。
+
 ### 最终会得到什么
 
 ```text

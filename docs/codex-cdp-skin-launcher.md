@@ -15,7 +15,7 @@
 | --- | --- |
 | 使用现有布局制作新配色、人物和背景 | 选择现有模板，准备 `skin.json + assets + LICENSES`，直接打包 `.codexskin` |
 | 需要一种现有模板无法表达的新布局 | 先在管理器项目增加一个受信任模板，再制作数据包 |
-| 已有 `.command` 皮肤 | 提取图片和权利信息，映射到现有或新增模板，再打包 `.codexskin` |
+| 已有 `.command`、CSS、ZIP 或旧 JSON 皮肤 | 使用 `$convert-to-codexskin` 只读检查，映射素材与模板后再打包 |
 | 只想安装别人制作的皮肤 | 下载 `.codexskin`，双击或在管理器中按 `⌘O` |
 
 ### 第一次使用：只需要一句话
@@ -503,19 +503,73 @@ CodexSkinManager/
 - 提供窄屏和 `prefers-reduced-motion` 降级；
 - 先添加失败测试，再实现模板并重建管理器。
 
-## 9. 已有 `.command` 皮肤的迁移
+## 9. 已有非 `.codexskin` 皮肤的转换
 
-旧启动器不能直接作为 `.codexskin` 导入，因为它包含可执行脚本和自带 CSS。正确迁移方式：
+仓库提供 [`$convert-to-codexskin`](../skills/convert-to-codexskin/SKILL.md) Skill，用于把用户已有的 `.command`、CSS+图片目录、ZIP、旧主题 JSON 或复制出来的运行时迁移为管理器格式。
 
-1. 定位旧运行时中的人物图、背景图和素材说明；
-2. 判断旧 CSS 能否映射到现有模板；
-3. 如果不能，先按第 8 节把 CSS 审核并迁移为管理器模板；
-4. 新建标准源目录和 `skin.json`；
-5. 用通用打包器生成 `.codexskin`；
-6. 通过管理器导入、应用和恢复；
-7. 验证成功后再决定是否保留旧 `.command`，不要自动删除用户文件。
+安装：
 
-迁移时不会把旧文件中的以下内容打入包：
+```bash
+cp -R skills/convert-to-codexskin \
+  "${CODEX_HOME:-$HOME/.codex}/skills/"
+```
+
+推荐提示词：
+
+```text
+使用 $convert-to-codexskin，把“/我的皮肤路径”转换为 Codex Skin Manager 可导入的 .codexskin。先只读检查，不执行旧 .command、JS、Shell 或二进制；先给我迁移摘要，说明可复用素材、图片转换、模板映射、权利缺口和排除文件，我确认后再创建源目录、打包、导入并测试。
+```
+
+没有安装 Skill 时也可以说：
+
+```text
+查看 skills/convert-to-codexskin/SKILL.md 和 docs/codex-cdp-skin-launcher.md，把我提供的旧皮肤安全转换为 .codexskin。
+```
+
+### 9.1 支持的输入
+
+| 输入 | 处理方法 |
+| --- | --- |
+| 已有 `.codexskin` | 不重复转换，直接执行管理器校验和导入 |
+| PNG/JPEG + JSON | 提取允许字段，建立 `skin.json + assets + LICENSES` |
+| CSS + 图片目录 | CSS 只作视觉参考，映射到允许列表模板 |
+| `.command` 或旧 CDP 运行时 | 只读清点图片、CSS 和许可；绝不执行脚本 |
+| ZIP | 检查包内路径、文件类型和大小，不解压到磁盘 |
+| WebP/GIF/SVG/HEIC | 保留原文件，生成新的 PNG/JPEG 衍生素材 |
+| 字体、二进制、远程资源 | 不进入 `.codexskin`，必要视觉效果改由管理器模板实现 |
+
+### 9.2 安全检查
+
+先运行 Skill 自带检查器：
+
+```bash
+python3 skills/convert-to-codexskin/scripts/inspect_legacy_skin.py \
+  --source "/绝对路径/旧皮肤"
+```
+
+检查器输出 JSON 清单，包括：
+
+- 可直接复用的 PNG/JPEG；
+- 需要转为 PNG/JPEG 的图片；
+- 需要人工审核和模板映射的 CSS；
+- 旧 JSON、许可文本和素材权利缺口；
+- 必须排除的 `.command`、Shell、JavaScript、Python、二进制和嵌套压缩包。
+
+检查器不会执行旧代码，也不会把 ZIP 解压到仓库或用户目录。
+
+### 9.3 转换步骤
+
+1. 保留原皮肤不变，在新目录工作；
+2. 运行只读检查器并向用户展示迁移摘要；
+3. 确认素材来源、是否允许重新分发和商业使用；
+4. 复制或转换获准使用的图片，旧 CSS 只用于选择/新增管理器模板；
+5. 新建标准源目录、`skin.json`、`LICENSES` 和 `skin-brief.md`；
+6. 用 `CodexSkinManager/scripts/build_codexskin.py` 生成 `.codexskin`；
+7. 通过管理器完成导入、应用、恢复以及宽窄屏验证；
+8. 用户要求提交时，按第 7.4 节上传源文件、截图和获准分发的成品；
+9. 验证成功后再决定是否保留旧文件，不自动删除用户原件。
+
+转换时不会把旧文件中的以下内容打入包：
 
 ```text
 *.command
@@ -527,7 +581,11 @@ injector.*
 renderer-inject.*
 ```
 
-旧运行时里的 CSS 只能作为开发参考，不能作为包内容。旧端口、PID、日志目录、状态键和守护进程配置全部废弃，由管理器统一负责。
+不能确认素材授权时，转换结果必须设置 `redistributionAllowed: false`，不得把原图、截图或成品上传到公开 GitHub。
+
+旧 CSS 无法保证自动像素级复刻。若它依赖当前管理器没有的布局，必须按第 8 节新增管理器模板并测试，不能把 CSS 或脚本塞进皮肤包，也不能关闭导入器安全检查。
+
+旧运行时里的端口、PID、日志目录、状态键和守护进程配置全部废弃，由管理器统一负责。
 
 ## 10. 旧 `.command` / CDP 架构说明（仅供排错）
 
