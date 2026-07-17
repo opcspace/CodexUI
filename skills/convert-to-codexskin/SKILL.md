@@ -79,6 +79,8 @@ Use this order:
 
 Never promise pixel-perfect automatic conversion from arbitrary CSS. CSS selectors and layout behavior require visual review against current Codex.
 
+Treat the lower-left Codex account row as a reserved interaction safe area. If legacy CSS places a theme name, avatar, badge, ornament, or generated `nav::after` content at the end or bottom of the sidebar, do not preserve that placement. Move theme identity above native navigation content. For current Codex Skin Manager sidebar templates, keep the decorative title, theme name, and native content in Flex order `-2 / -1 / 0`.
+
 ### 5. Build the declarative source
 
 Create a new directory without changing the legacy input:
@@ -120,7 +122,8 @@ Then:
 3. apply and restore the skin;
 4. capture wide and narrow screenshots;
 5. verify core Codex interactions remain usable;
-6. record output SHA-256 and rights state.
+6. measure the sidebar theme identity and account-control rectangles and require `0px` overlap;
+7. record output SHA-256 and rights state.
 
 If conversion fails, fix the declarative source or manager template. Do not weaken importer checks or add legacy executable content to the package.
 

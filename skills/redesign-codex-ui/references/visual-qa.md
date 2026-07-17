@@ -46,6 +46,14 @@
 - Check sticky headers, composer position, nested scrolling, drawers, and overlays.
 - Check zoom at 200% when feasible.
 
+## Codex sidebar account safe area
+
+- Treat the lower-left account row as reserved native UI at every window size.
+- Keep theme identity above native navigation; never append it to the sidebar bottom with default-order `::after` content.
+- For Codex Skin Manager templates, verify decorative title/theme/native Flex order is `-2 / -1 / 0`.
+- Measure the theme identity and account-control rectangles in the rendered Codex UI and require `0px` overlap; a screenshot-only judgment is insufficient.
+- Recheck after switching every template and after continuous resize.
+
 ## Accessibility
 
 - Navigate all primary actions with the keyboard.
